@@ -6,39 +6,6 @@
 #include <map>
 #include <vector>
 
-int letter_score(char c) {
-	// Letter scores used by Wordfeud for English.
-	switch (c) {
-		case 'a': return 1;
-		case 'b': return 4;
-		case 'c': return 4;
-		case 'd': return 2;
-		case 'e': return 1;
-		case 'f': return 4;
-		case 'g': return 3;
-		case 'h': return 4;
-		case 'i': return 1;
-		case 'j': return 10;
-		case 'k': return 5;
-		case 'l': return 1;
-		case 'm': return 3;
-		case 'n': return 1;
-		case 'o': return 1;
-		case 'p': return 4;
-		case 'q': return 10;
-		case 'r': return 1;
-		case 's': return 1;
-		case 't': return 1;
-		case 'u': return 2;
-		case 'v': return 4;
-		case 'w': return 4;
-		case 'x': return 8;
-		case 'y': return 4;
-		case 'z': return 10;
-		default: return 0;
-	}
-}
-
 char tile(std::vector<std::string> const & board, int row, int col) {
 	if (row < 0 || std::size_t(row) >= board.size()) return ' ';
 	if (col < 0 || std::size_t(col) >= board[row].size()) return ' ';
@@ -48,6 +15,7 @@ char tile(std::vector<std::string> const & board, int row, int col) {
 int scrabble_score(
 	std::vector<std::string> const & board,
 	std::vector<std::string> const & words,
+	std::array<int, 256> const & letter_scores,
 	std::string letters,
 	std::string const & word,
 	int row, int col, bool vert
@@ -69,7 +37,7 @@ int scrabble_score(
 
 	for (char ch : word) {
 		char b = board[row][col];
-		int tile_score = letter_score(ch);
+		int tile_score = letter_scores[ch];
 		int tile_word_multiplier = 1;
 		if (b == ch) {
 			attached = true;
@@ -80,7 +48,7 @@ int scrabble_score(
 			if (i == std::string::npos) {
 				i = letters.find('?');
 				if (i == std::string::npos) return -1;
-				tile_score = 0;
+				tile_score = letter_scores['?'];
 			}
 			letters[i] = ' ';
 			placed_tile = true;
@@ -109,8 +77,8 @@ int scrabble_score(
 				if (!std::binary_search(words.begin(), words.end(), word_across)) return -1;
 				attached = true;
 				int word_across_score = 0;
-				for (char c : word_across) word_across_score += letter_score(c);
-				word_across_score += tile_score - letter_score(ch);
+				for (char c : word_across) word_across_score += letter_scores[c];
+				word_across_score += tile_score - letter_scores[ch];
 				extra_score += word_across_score * tile_word_multiplier;
 			}
 		}
@@ -132,7 +100,7 @@ int scrabble_score(
 
 	if (letters.find_first_not_of(' ') == std::string::npos) {
 		// Add 40 points when all our letters are used.
-		extra_score += 40;
+		extra_score += letter_scores['!'];
 	}
 
 	return score * multiplier + extra_score;
@@ -140,8 +108,8 @@ int scrabble_score(
 
 int main(int argc, char * * argv) {
 
-	if (argc != 4) {
-		std::clog << "Usage: " << argv[0] << " <word-list-file> <board-file> <tiles>" << std::endl;
+	if (argc != 5) {
+		std::clog << "Usage: " << argv[0] << " <word-list-file> <scoring-file> <board-file> <tiles>" << std::endl;
 		return 1;
 	}
 
@@ -161,10 +129,25 @@ int main(int argc, char * * argv) {
 
 	std::sort(words.begin(), words.end());
 
-	std::vector<std::string> board;
+	std::array<int, 256> letter_scores{};
 
 	{
 		std::ifstream f(argv[2]);
+		char key;
+		int value;
+		while (f >> key >> value) {
+			letter_scores[key] = value;
+		}
+		if (!f.eof()) {
+			std::clog << "Error while reading scoring file." << std::endl;
+			return 1;
+		}
+	}
+
+	std::vector<std::string> board;
+
+	{
+		std::ifstream f(argv[3]);
 		for (std::string line; std::getline(f, line); ) {
 			if (line.back() == '\n') line.pop_back();
 			if (!line.empty()) board.push_back(std::move(line));
@@ -181,7 +164,7 @@ int main(int argc, char * * argv) {
 		}
 	}
 
-	std::string letters = argv[3];
+	std::string letters = argv[4];
 
 	int const width = board.front().size();
 	int const height = board.size();
@@ -191,12 +174,12 @@ int main(int argc, char * * argv) {
 	for (auto const & word : words) {
 		for (int row = 0; row < height; ++row)
 		for (int col = 0; col <= width - int(word.size()); ++col) {
-			int s = scrabble_score(board, words, letters, word, row, col, false);
+			int s = scrabble_score(board, words, letter_scores, letters, word, row, col, false);
 			if (s >= 0) possibilities.insert({s, {row, col, false, word.c_str()}});
 		}
 		for (int row = 0; row <= height - int(word.size()); ++row)
 		for (int col = 0; col < width; ++col) {
-			int s = scrabble_score(board, words, letters, word, row, col, true);
+			int s = scrabble_score(board, words, letter_scores, letters, word, row, col, true);
 			if (s >= 0) possibilities.insert({s, {row, col, true, word.c_str()}});
 		}
 	}

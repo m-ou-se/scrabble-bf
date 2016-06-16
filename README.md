@@ -5,7 +5,7 @@ Scrabble/Wordfeud board and find the highest scoring move.
 
 ## Usage
 
-    scrabble-bf <word-list-file> <board-file> <tiles>
+    scrabble-bf <word-list-file> <scoring-file> <board-file> <tiles>
 
 `<word-list-file>` should be the word list to use, with one (lower-case) word
 per line. I recommend the [the Enable list][1].
@@ -31,12 +31,22 @@ See the file [`example-board`](example-board) for an example board.
 Start with a (copy of) an [empty board](empty-scrabble-board), and replace the
 tiles with letters as you play.
 
+`<scoring-file>` should be a file containing the values of all letters, and
+(optionally) the bonus score for when all tiles are used. It should be a plain
+text file, whith every line containing the letter followed by its value
+(separated by whitespace). Use `?` to give the empty tile a value, and use `!`
+to specify the value of a bonus. Scoring files [for English Scrabble][2] and
+[for English Wordfeud][3] are included.
+
+[2]: english-scrabble-scoring
+[3]: english-wordfeud-scoring
+
 `<tiles>` are the tiles you have available to place on the board. Use `?` for
 the blank tile.
 
 Example:
 
-    scrabble-bf enable1.txt example-board 'ieds?pj'
+    scrabble-bf enable1.txt english-scrabble-scoring example-board 'ieds?pj'
 
 ## Output
 
@@ -47,14 +57,15 @@ letter of the word, the direction (horizontal or vertical), and the word.
 For example:
 
     ...
-    37  1  1 V jee
-    38  1  1 V joe
-    38 15  5 H spade
-    43 15  8 H deeps
-    53 15  6 H jade
+    32  2 12 H edit
+    32  1  1 V joe
+    34 15  8 H deep
+    35 15  5 H spade
+    40 15  8 H deeps
+    47 15  6 H jade
 
 Here, the word 'jade', when placed horizontally starting at row 15 and column 6,
-will give you 53 points.
+will give you 47 points.
 
 ## Copyright
 
