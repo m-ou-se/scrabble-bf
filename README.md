@@ -36,6 +36,24 @@ Example:
 
     scrabble-bf enable1.txt my-board 'tu?zdse'
 
+## Output
+
+The output of the tool is a list of all possible moves, sorted by their score.
+Each line has five columns: The score, the row and column numbers of the first
+letter of the word, the direction (horizontal or vertical), and the word.
+
+For example:
+
+    ...
+    18  9  4 H unite
+    19  6  4 H neat
+    23 10  8 V auntie
+    27 10 11 V minute
+    ...
+
+Here, the word 'minute', when placed vertically starting at row 10 and column
+11, will give you 27 points.
+
 ## Copyright
 
 Copyright &copy; 2016 Mara Bos
