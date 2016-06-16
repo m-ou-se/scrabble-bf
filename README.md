@@ -28,8 +28,8 @@ character per tile:
 
 See the file [`example-board`](example-board) for an example board.
 
-Start with a (copy of) an empty board (see the `empty-*-board` files), and
-replace the tiles with letters as you play.
+Start with a (copy of) an [empty board](empty-scrabble-board), and replace the
+tiles with letters as you play.
 
 `<tiles>` are the tiles you have available to place on the board. Use `?` for
 the blank tile.
@@ -47,6 +47,8 @@ letter of the word, the direction (horizontal or vertical), and the word.
 For example:
 
     ...
+    37  1  1 V jee
+    38  1  1 V joe
     38 15  5 H spade
     43 15  8 H deeps
     53 15  6 H jade
