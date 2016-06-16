@@ -26,15 +26,17 @@ character per tile:
 | `@`       | double word count            |
 | `#`       | tripple word count           |
 
-See the file [`empty-board`](empty-board) for an empty Wordfeud board. Start
-with a (copy of) an empty board, and replace the tiles with letters as you play.
+See the file [`example-board`](example-board) for an example board.
+
+Start with a (copy of) an empty board (see the `empty-*-board` files), and
+replace the tiles with letters as you play.
 
 `<tiles>` are the tiles you have available to place on the board. Use `?` for
 the blank tile.
 
 Example:
 
-    scrabble-bf enable1.txt my-board 'tu?zdse'
+    scrabble-bf enable1.txt example-board 'ieds?pj'
 
 ## Output
 
@@ -45,14 +47,12 @@ letter of the word, the direction (horizontal or vertical), and the word.
 For example:
 
     ...
-    18  9  4 H unite
-    19  6  4 H neat
-    23 10  8 V auntie
-    27 10 11 V minute
-    ...
+    38 15  5 H spade
+    43 15  8 H deeps
+    53 15  6 H jade
 
-Here, the word 'minute', when placed vertically starting at row 10 and column
-11, will give you 27 points.
+Here, the word 'jade', when placed horizontally starting at row 15 and column 6,
+will give you 53 points.
 
 ## Copyright
 
