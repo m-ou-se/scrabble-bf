@@ -8,7 +8,7 @@ Scrabble/Wordfeud board and find the highest scoring move.
     scrabble-bf <word-list-file> <scoring-file> <board-file> <tiles>
 
 `<word-list-file>` should be the word list to use, with one (lower-case) word
-per line. I recommend the [the Enable list][1].
+per line. I recommend [the Enable list][1].
 
 [1]: http://www.puzzlers.org/pub/wordlists/enable1.txt
 
