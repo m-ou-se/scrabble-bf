@@ -120,12 +120,13 @@ int scrabble_score(
 	}
 
 	if (!attached) {
-		// Word isn't adjacent to any existing tile, nor does it go over a '*' tile.
+		// Word doesn't use any existing tiles, isn't adjacent to any existing tile,
+		// nor does it go over a '*' tile.
 		return -1;
 	}
 
 	if (!placed_tile) {
-		// Didn't place any of our letters, the word was already on the board.
+		// Didn't place any of new letters, the word was already completely on the board.
 		return -1;
 	}
 
