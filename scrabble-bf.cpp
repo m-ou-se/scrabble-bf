@@ -170,7 +170,7 @@ int main(int argc, char * * argv) {
 			if (!line.empty()) board.push_back(std::move(line));
 			if (board.size() > 1) {
 				if (board.back().size() != board.front().size()) {
-					std::clog << "Error: board not square." << std::endl;
+					std::clog << "Error: board not rectangular." << std::endl;
 					return 1;
 				}
 			}
